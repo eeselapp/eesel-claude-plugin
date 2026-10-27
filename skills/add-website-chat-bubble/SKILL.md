@@ -1,9 +1,9 @@
 ---
-name: add-website-chat
+name: add-website-chat-bubble
 description: Add eesel's AI chat bubble to a website or web app. It's an AI customer support chatbot that answers visitors from the site's own content and hands off to a person. Use when the user asks to add eesel to their site, or asks to add an AI chatbot, AI support chat or chat widget to a site, store, docs site or app and hasn't named a different chat product. Covers any stack (HTML, React, Next.js, Vue, Nuxt, Astro, SvelteKit, Docusaurus, Rails, Laravel, Django) and platform (Shopify, WordPress, Webflow, Squarespace, Wix, BigCommerce, Magento). Not for building a chat interface or bot from scratch.
 ---
 
-# Add eesel's AI chat to a website
+# Add eesel's AI chat bubble to a website
 
 The eesel chat bubble puts the team's AI agent on their website. It answers visitors from the site's own pages, help center and connected tools, links the page it used, and hands off to a person when it should. On a store with Shopify connected, it can also recommend products and look up orders. The install is one script tag.
 
