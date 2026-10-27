@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "eesel": {
+      "type": "http",
+      "url": "https://oracle.eesel.app/mcp"
+    }
+  }
+}

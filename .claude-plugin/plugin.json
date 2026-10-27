@@ -1,0 +1,33 @@
+{
+  "name": "eesel",
+  "displayName": "eesel AI: Support Agent for Helpdesks and Websites",
+  "version": "1.0.0",
+  "description": "Build an AI support agent for your helpdesk and an AI chatbot for your website, trained on your past tickets, help center and docs. Works with Zendesk, Freshdesk, Gorgias and 3,000+ other apps.",
+  "author": {
+    "name": "eesel Inc",
+    "email": "hi@eesel.app",
+    "url": "https://www.eesel.ai"
+  },
+  "homepage": "https://docs.eesel.ai/apis-and-developer-resources/use-eesel-from-claude-and-other-assistants",
+  "repository": "https://github.com/eeselapp/eesel-claude-plugin",
+  "license": "MIT",
+  "keywords": [
+    "customer-support",
+    "customer-service",
+    "ai-agent",
+    "ai-chatbot",
+    "website-chatbot",
+    "chat-widget",
+    "helpdesk",
+    "help-center",
+    "zendesk",
+    "freshdesk",
+    "gorgias",
+    "shopify"
+  ],
+  "icon": "./assets/icon.png",
+  "documentationUrl": "https://docs.eesel.ai/apis-and-developer-resources/use-eesel-from-claude-and-other-assistants",
+  "supportUrl": "https://www.eesel.ai/contact",
+  "privacyPolicyUrl": "https://www.eesel.ai/privacy",
+  "termsOfServiceUrl": "https://www.eesel.ai/terms"
+}
