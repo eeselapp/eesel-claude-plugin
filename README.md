@@ -8,7 +8,7 @@ Build an AI support agent that answers tickets in your helpdesk and chats with v
 
 | Skill | What it does |
 | --- | --- |
-| `set-up-support-agent` | Connects your helpdesk, loads your help center, macros and past tickets, sets the agent's rules, and turns on drafting, starting with internal notes your team reviews. |
+| `set-up-support-agent` | Connects your helpdesk, loads your help center, macros and past tickets, sets the agent's rules, and turns on drafting, starting with private notes or drafts your team reviews. |
 | `add-website-chat` | Adds eesel's AI chatbot to your website. In a codebase it finds the stack and adds the script to the right layout file. For Shopify, WordPress, Webflow and other hosted platforms, it gives the exact steps. |
 | `test-on-past-tickets` | Runs your agent on a sample of real resolved tickets without acting on them, compares its answers with what your team sent, and reports match rates by theme with the fixes that would raise them. |
 | `review-support-performance` | Shows what your agent did, the top themes and trends in your tickets, and the questions it couldn't answer, with what to fix next. |

@@ -5,98 +5,39 @@ description: Set up an eesel AI customer support agent inside the user's helpdes
 
 # Set up an eesel AI support agent in a helpdesk
 
-eesel is an AI teammate for customer support. It learns from a team's help center, macros, past tickets and files. Then it drafts or sends replies in the helpdesk, tags and routes tickets, and hands off what needs a person. This skill takes a team from nothing to an agent drafting replies on their real tickets.
+eesel is an AI teammate for customer support. It learns from a team's help center, macros, past tickets and files, then drafts or sends replies in their helpdesk, tags and routes tickets, and hands off what needs a person. The goal here is a team that has seen the agent get their own tickets right and has it drafting on new ones.
 
-## Before you start: connect eesel
+## Connecting eesel
 
-Call the eesel connector's `status` tool. If it answers, eesel is connected.
+The eesel connector's `status` tool answers once eesel is connected. If its tools aren't available: in claude.ai or Cowork, connect **eesel** from this plugin's **Connectors** tab (on Team and Enterprise plans, a Claude organization Owner adds it first); in Claude Code, run `/mcp`, choose `plugin:eesel:eesel` and pick **Authenticate**. Sign-in happens on eesel's own page, which also creates a free trial workspace (100 credits for 7 days, no card) for someone without one, so passwords, API keys and tokens never go through the chat.
 
-If the eesel tools aren't available:
+The connector works as one agent: the one picked when eesel was connected, or the workspace's first agent if none was picked. Every tool, `chat` included, acts as that agent, except the `activity` list, which shows runs from every agent in the workspace, each with its agent's name. For another agent, reconnect eesel and pick it on the sign-in page, or use the eesel dashboard. Tool names here are the connector's own, and your client may show them with a prefix.
 
-- **claude.ai or Cowork:** open this plugin's **Connectors** tab and connect **eesel**.
-- **Claude Code:** run `/mcp`, choose `plugin:eesel:eesel`, and pick **Authenticate**.
+## How to approach it
 
-On Team and Enterprise plans, an Owner adds the connector for the organization first, then each member connects with their own account.
+- **Start from what the workspace already has.** A helpdesk connected elsewhere in the workspace can't be used by this agent until it's added to it, and adding it needs no new sign-in. So offer to add it to this agent, rather than connecting it from scratch.
+- **Ask for one thing to begin: a link to their helpdesk or help center,** and work out the helpdesk and subdomain from it. A link is something they already have, and most people who left eesel's setup did so at the first question, usually a choice between ways to connect or a request for a subdomain. A help center on their own domain usually names its helpdesk in the page, so read it before asking.
+- **If they have no helpdesk, don't pick one for them; start from what they want done,** such as answering visitors on their website (the `add-website-chat` skill). A helpdesk they don't have is a dead end.
+- **Prefer the full connection.** Drafts on their tickets, automations and actions all need it. The help-center-only option (`quick_start`), where a helpdesk offers one, suits someone who can't, or doesn't want to, connect the helpdesk account yet.
+- **The person approves a connection inside their helpdesk,** through the link that `execute` returns. Keys for helpdesks that connect with an API key go into eesel's secure form, never the chat, because a key pasted here stays in the chat history: ask the agent in `chat` to connect it and pass on the form link it returns, or the person uses **Integrations** in the dashboard.
+- **Which rules the agent follows (when to escalate, what it may promise) is the team's call,** so ask them, then pass the rules to the agent in `chat`.
+- **Show it working on tickets they know before anything is switched on.** Offer a few recent tickets still waiting on a reply, each named by what the customer asked so the person picks one without hunting for it, or the agent's answers to recently resolved tickets next to what their team sent. Their team's answer beside the agent's is the fastest proof, and asking the agent to show drafts here, not post them, keeps the helpdesk untouched. A bigger test on past tickets is the `test-on-past-tickets` skill.
+- **Offer a narrow first automation that drafts rather than replies, unless they ask for direct replies,** on the kind of ticket they watched the agent get right, because they trust it on tickets they've already seen it handle. When they haven't said where drafts should go, a private note or draft on each new ticket is a sensible default: drafts that stay in the dashboard barely automate anything. If they started on drafts, direct replies come after those drafts have been landing well and the person asks. A second drafting automation on the same tickets would give each ticket two drafts, so check what's already on first.
+- **Turning an automation on changes what happens on live tickets,** because it runs on every matching ticket from then on, and each ticket it works usually uses 1 credit. So the person decides, knowing that.
+- **Which actions need approval is the team's setting, and refunds and other actions that move money are never switched to Auto from here.** Anthropic's directory policy requires a person in the loop for financial actions taken through a plugin. The person can change any setting in the eesel dashboard.
+- **When the agent gets something wrong, check with the person before correcting it in `chat`,** because it saves editors' lasting corrections, and the saved correction then shapes its replies to customers.
 
-Sign-in happens on eesel's own page. For someone with no account, it creates a free trial workspace: 100 credits for 7 days, no card. Never ask for a password, API key or token in chat.
+## Reference
 
-Tool names below are the eesel connector's own (`chat`, `status`, `integrations` and so on). Your client may show them with a prefix. The connector works with the workspace's first agent. In a workspace with several agents, name the one you mean in each `chat` message (ask the agent in `chat` which agents exist). The other tools always act on the first agent, so for anything else on another agent, use `chat` or the eesel dashboard.
-
-## Step 1: see what's already set up
-
-- `status` lists the connected tools and whether their content is downloaded.
-- `integrations` (default `action: "list"`) shows the integrations on this agent. Its `other_workspace_integrations` are connected elsewhere in the workspace but not on this agent.
-- If the helpdesk is already on this agent, skip to Step 4.
-- If it's connected in the workspace but not on this agent, offer to add it by asking the agent in `chat`, instead of connecting it again.
-
-## Step 2: find the helpdesk
-
-Ask for one thing: a link to their helpdesk or help center. Don't ask them to choose a connection method or type a subdomain.
-
-- Work out the helpdesk and subdomain from the link. `acme.zendesk.com` is Zendesk with subdomain `acme`. `acme.freshdesk.com` is Freshdesk. `acme.gorgias.com` is Gorgias.
-- A help center on their own domain, such as `help.acme.com`, usually names its helpdesk in the page footer or source. If you can fetch web pages, read that public page before asking.
-- If they have no helpdesk, don't pick one for them. Offer the agent on their website instead (the `add-website-chat` skill), or ask what they want done.
-
-## Step 3: connect it
-
-1. Call `integrations` with `action: "apps"` and the `platform`, for example `zendesk`. It lists the connection options, each with a `type` such as `oauth`, `api_key` or `quick_start`, and what each one enables.
-2. Prefer the full connection (`oauth` or `api_key`). Drafts on tickets, automations and actions all need it. Some helpdesks also offer `quick_start`, which reads the public help center only. Use it when they can't or don't want to connect the helpdesk account yet.
-3. If the detail includes a `source_choice` (Zendesk does), ask which of its sources to import before connecting, such as help center articles, macros and past tickets. Everything imports by default. Pass the keys of the sources they declined, comma-separated, as `excluded_sources` in `params`.
-4. Call `manage_integrations` with `action: "connect"`, the `platform`, and `connection_type` set to the option's `type`. If it asks for fields you already know, such as the subdomain, finish with `action: "execute"` and `params`.
-5. Give the person the link it returns. They approve the connection inside their helpdesk. Don't wait in a loop for the click.
-6. If it returns `waiting_for_approval` with no link, ask the agent for one: `chat` with "give me the connect link for <platform>".
-7. For an `api_key` connection, such as Freshdesk, never ask for the key in chat. Point the person to the secure form the connect step links to, or to **Integrations** in the eesel dashboard at [dashboard.eesel.ai](https://dashboard.eesel.ai).
-8. Confirm with `status`. It lists every connected tool with its connection health.
-
-## Step 4: give it knowledge
-
-- Connecting usually starts the first download. Check `status` before starting another one.
-- `integrations` with `action: "download_list"` and the `integration_id` shows what can be downloaded (help center, macros, tickets). `action: "download_status"` shows how far a download has got.
-- To start a download, call `manage_integrations` with `action: "download"`, the `integration_id` and a `type` such as `tickets` or `articles`. A first ticket download usually takes minutes. The agent can already answer from what has landed.
-- For their website, ask the agent in `chat`, for example "read our website https://acme.com".
-- For a policy or guide that lives nowhere else, call `upload_file` with a file name and the full text. A file with the same name is replaced, so check `files` first.
-
-## Step 5: tell it how to behave
-
-The agent writes its own instructions, so change them by asking it in `chat`. For example:
-
-> Add to your instructions: escalate (internal note, assign to a person, don't reply) when the customer is upset, asks for a manager, or wants a refund over $100.
-
-Ask the person which rules they want. Don't make up policies for them. Show the result with `instructions`.
-
-## Step 6: show it working on real tickets
-
-Prove the agent on tickets the team already knows before turning anything on:
-
-- Ask the agent in `chat` for two or three recent tickets still waiting on a reply, each named by what the customer asked. Offer a draft for one, and ask the agent to show the draft in this conversation, not post it in the helpdesk.
-- Or ask it to answer a few recently resolved tickets here and put its answers next to what the team sent.
-- Pass the agent's drafts and comparisons on as they are.
-- When a small round goes well, offer a bigger test with the `test-on-past-tickets` skill.
-
-## Step 7: turn on drafting
-
-An automation is a helpdesk event plus instructions for one job. Nothing happens on a ticket until one is on. Once it is on, it runs on every matching ticket.
-
-1. Call `automations` with `integration_key`, for example `zendesk`. It lists that helpdesk's automations, each with its `key`, and which are on. If a drafting automation is already on, don't create a second one.
-2. Start with drafts, not replies. The safe default is a private internal note on each new ticket for a person to review.
-3. Get the person's OK. Tell them it will run on every matching ticket from then on, and each ticket it works uses 1 credit. Then create it through `chat`, for example:
-
-   > Set up a Zendesk automation: when a customer messages, draft a reply as an internal note for a person to review. Skip anything tagged spam.
-
-4. To pause or resume one, call `manage_automations` with `action: "disable"` or `"enable"`, the `integration_key`, and the automation's `key` as `trigger_key`. Use `action: "delete"` only when they ask to delete it.
-5. Start narrow, on the kind of ticket they watched the agent get right. Move routine cases to direct replies only after the drafts have been landing well and the person asks for it.
-
-## Permissions and approvals
-
-Each action (reply, tag, refund) either runs on its own, asks a person first, or is off. New agents are safest with replies and anything irreversible set to ask first. Don't change these settings unless the person asks. Never switch refunds or anything else that moves money to run on its own: leave that to the person, in the dashboard under **Integrations**. For actions waiting on a person, use the `handle-approvals` skill.
-
-## What it costs
-
-Setup is free. Chatting with the agent is free too, except that a very long chat uses credits past its free allowance. The agent uses 1 credit per ticket or chat conversation it handles for customers, however many messages it takes. Plans are on [eesel's pricing page](https://www.eesel.ai/pricing).
-
-## Rules
-
-- Ask before anything that reaches customers or changes the helpdesk: turning on an automation, switching drafts to direct replies, approving an action.
-- Never ask for or handle passwords, API keys or tokens.
-- Every number you report, such as tickets downloaded, comes from a tool result in this conversation.
-- Pass the agent's replies on faithfully. If it gets something wrong, tell the person. Correct the agent in `chat` only after they agree, because it may save the correction to its live instructions.
+- `integrations` (default `action: "list"`): integrations on this agent. `other_workspace_integrations` are connected in the workspace but not on this agent. `manage_integrations` with `action: "execute"`, the `platform` and that `integration_id` adds one to this agent.
+- `integrations` with `action: "apps"` and `platform` (such as `zendesk`): connection options, each with a `type` (`oauth`, `api_key` or `quick_start`), and what each enables.
+- Zendesk's detail has a `source_choice`. Pass the sources they decline, comma-separated, as `excluded_sources` in `params`; one excluded now can be brought back later by asking the agent in `chat`.
+- `manage_integrations` with `action: "connect"`, `platform` and `connection_type` starts a connection. `action: "execute"` with `params` (such as `{"zendeskSubdomain": "acme"}`) completes it.
+- A connect that returns `waiting_for_approval` with no link: ask the agent in `chat` for "the connect link for <platform>". `status` confirms a connection once it's approved.
+- `integrations` with `action: "download_list"` or `"download_status"` and an `integration_id`: what can be downloaded and how far it has got. Connecting usually starts the first download, which takes minutes for most ticket histories and longer for a big one, and the agent can already answer from what has landed.
+- `manage_integrations` with `action: "download"`, `integration_id` and `type` (such as `tickets` or `articles`) starts a download. With a `url`, it crawls a website instead. Asking the agent in `chat` to read the site also works.
+- `automations` with `integration_key` (such as `zendesk`) lists that helpdesk's automations, each with a `key`, and which are on.
+- `manage_automations` takes that `integration_key`, and the automation's `key` as `trigger_key`.
+- A helpdesk automation sees the ticket as it is when the event fires, so a condition that lands later, such as a tag a person adds, can't gate it, unless that tag is itself the event. A schedule that sweeps the queue can.
+- Credits: setup is free, and so are most chats with the agent (a very long one uses credits past its free allowance). Most tickets and customer chats are 1 credit each; heavy ones use more, a scheduled run uses at least 1, and each image the agent generates is 1. Plans are on [eesel's pricing page](https://www.eesel.ai/pricing).
+- Dashboard: [dashboard.eesel.ai](https://dashboard.eesel.ai). Each action's setting (**Auto**, **Needs approval** or **Disabled**) is under **Integrations**, on the app.

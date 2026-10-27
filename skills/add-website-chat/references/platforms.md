@@ -89,7 +89,7 @@ Paste it into the main layout template before `</body>`: `app/views/layouts/appl
 
 ## Hosted platforms
 
-The person pastes the snippet in the platform's admin, and the bubble is live from that save. Test the answers first (Step 2 of the skill). Give them these steps.
+When the site's theme isn't in the codebase, the person pastes the snippet in the platform's admin.
 
 ### Shopify
 

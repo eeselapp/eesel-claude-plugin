@@ -5,33 +5,24 @@ description: Review, approve or deny actions an eesel AI support agent is holdin
 
 # Approve or deny held actions
 
-An action set to "Needs approval" is prepared by the agent and held until a person decides. Approving runs it right away in the system it targets: a reply reaches the customer, a refund is issued. It can't be undone from here.
+An action set to **Needs approval** is prepared by the agent and held until someone decides. Approving runs it right away in the system it targets: the reply reaches the customer, the refund goes out. It can't be undone from here.
 
-## Before you start: connect eesel
+## Connecting eesel
 
-Call the eesel connector's `status` tool. If it answers, eesel is connected.
+The eesel connector's `status` tool answers once eesel is connected. If its tools aren't available: in claude.ai or Cowork, connect **eesel** from this plugin's **Connectors** tab (on Team and Enterprise plans, a Claude organization Owner adds it first); in Claude Code, run `/mcp`, choose `plugin:eesel:eesel` and pick **Authenticate**. Sign-in happens on eesel's own page, which also creates a free trial workspace (100 credits for 7 days, no card) for someone without one, so passwords, API keys and tokens never go through the chat.
 
-If the eesel tools aren't available:
+The connector works as one agent: the one picked when eesel was connected, or the workspace's first agent if none was picked. Every tool, `chat` included, acts as that agent, except the `activity` list, which shows runs from every agent in the workspace, each with its agent's name. For another agent, reconnect eesel and pick it on the sign-in page, or use the eesel dashboard. Tool names here are the connector's own, and your client may show them with a prefix.
 
-- **claude.ai or Cowork:** open this plugin's **Connectors** tab and connect **eesel**.
-- **Claude Code:** run `/mcp`, choose `plugin:eesel:eesel`, and pick **Authenticate**.
+## How to approach it
 
-On Team and Enterprise plans, an Owner adds the connector for the organization first, then each member connects with their own account.
+- **The person decides each held action, seeing exactly what it will do:** the app, the customer or ticket, and the content, such as the reply text or the refund amount. It acts in their real system the moment it's approved, so the decision is theirs, made on those details, and a batch approval covers only what they've seen listed.
+- **Anything that moves money, such as a refund, isn't switched to Auto from here.** Anthropic's directory policy requires a person in the loop for financial actions taken through a plugin. The person can change that setting in the eesel dashboard.
+- **Only workspace editors (Owners and Editors) can decide.** Viewers see held actions but can't release them, so a permissions error means someone else has to.
+- **Which actions need approval is the team's setting,** changed in the eesel dashboard or by asking the agent in `chat`.
 
-Sign-in happens on eesel's own page. For someone with no account, it creates a free trial workspace: 100 credits for 7 days, no card. Never ask for a password, API key or token in chat.
+## Reference
 
-Tool names below are the eesel connector's own (`chat`, `status`, `integrations` and so on). Your client may show them with a prefix. The connector works with the workspace's first agent. In a workspace with several agents, name the one you mean in each `chat` message (ask the agent in `chat` which agents exist). The other tools always act on the first agent, so for anything else on another agent, use `chat` or the eesel dashboard.
-
-## Steps
-
-1. Call `approvals`. It lists each held action, what it would do, and its `approval_id`.
-2. Show the person every held action: what it does, in which app, for which customer or ticket, and its exact content, such as the reply text or the refund amount. Don't summarize the details away.
-3. Ask for a decision on each one. Approve only on a clear yes for that specific action. "Approve all" is fine only after you have listed every action it covers and the person confirms. Anything that moves money, such as a refund, always needs its own separate yes.
-4. Call `decide_approval` with `action: "approve"` or `action: "deny"` and the `approval_id`. Report what ran and what was dropped.
-5. Call `approvals` again to show what's left.
-
-## Good to know
-
-- Only editors (an Owner or Editor of the workspace) can decide. Viewers can see held actions but can't decide them. If deciding fails because of permissions, say so.
-- A connection that returned `waiting_for_approval` may not appear here. Check `status`, and ask the agent in `chat` for the connect link.
-- To make a kind of action stop asking, or start asking, the person changes it in the eesel dashboard (**Integrations**, then the app's actions), or asks the agent in `chat`, for example "ask me before any refund". Don't change these settings unless they ask. Never switch refunds or anything else that moves money to run on its own: leave that to the person, in the dashboard.
+- `approvals` lists each held action, what it would do, and its `approval_id`. `decide_approval` with `action: "approve"` or `"deny"` and the `approval_id` decides one; after a denial, the agent carries on without it.
+- These cover the connected agent. Another agent's held actions are decided in the eesel dashboard at [dashboard.eesel.ai](https://dashboard.eesel.ai).
+- Each action's setting is **Auto**, **Needs approval** or **Disabled**, set in the dashboard under **Integrations**, on the app's actions. **Always allow** on an approval in the dashboard also switches that action to **Auto**.
+- A connection that returned `waiting_for_approval` may not be listed in `approvals`. `status` shows whether it went through, and the agent in `chat` can give the connect link.
