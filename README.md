@@ -2,7 +2,7 @@
 
 ![eesel AI](assets/icon.png)
 
-Build an AI support agent that answers tickets in your helpdesk and chats with visitors on your website, without leaving Claude. eesel learns from your past tickets, help center and internal docs. It drafts or sends replies, tags and routes tickets, and hands off anything that needs a person. It works with the helpdesk you already use, including Zendesk, Freshdesk and Gorgias, connects to 3,000+ other apps, and replies in more than 80 languages.
+Build an AI support agent that answers tickets in your helpdesk and chats with visitors on your website, without leaving Claude. eesel learns from your past tickets, help center and internal docs. It drafts or sends replies, tags and routes tickets, and hands off anything that needs a person. It works with the helpdesk you already use, including Zendesk, Freshdesk, Gorgias and Help Scout, connects to tools like Jira, Confluence and Magento and 3,000+ other apps, and replies in more than 80 languages.
 
 ## Skills
 
